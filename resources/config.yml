@@ -1,0 +1,16 @@
+groups:
+  Guest:
+    fancyName: "§r§l§7Guest"
+    permissions:
+      - "core.groups"
+join:
+  message-server: "§r§a + {name}"
+  message-player:
+    - "§r§fWelcome, {name}"
+    - "§r§fKitPvP!"
+  title: "Welcome!"
+  subtitle: "Hi!"
+quit-message: "§r§c - {name}"
+commands:
+  setgroup:
+    group-set: "Your group has been set to: {group}"

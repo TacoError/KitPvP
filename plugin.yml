@@ -1,0 +1,12 @@
+name: KitPvP
+author: Taco
+description: "KitPvP for Pocketmine-MP 4.0.0"
+website: "https://github.com/TacoErorr"
+
+api: "4.0.0"
+version: 1.0.0
+main: Taco\KitPvP\Main
+
+permissions:
+  core.groups:
+    default: op
