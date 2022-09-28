@@ -3,11 +3,14 @@
 use JsonException;
 use pocketmine\math\AxisAlignedBB;
 use pocketmine\math\Vector3;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 use pocketmine\world\Position;
 use pocketmine\world\World;
 use Taco\KitPvP\Main;
 use Taco\KitPvP\utils\VectorUtils;
+use Taco\KitPvP\zones\commands\AddZoneCommand;
+use Taco\KitPvP\zones\commands\RemoveZoneCommand;
 
 class ZoneManager {
 
@@ -18,6 +21,11 @@ class ZoneManager {
     private array $zones;
 
     public function __construct() {
+        Server::getInstance()->getCommandMap()->registerAll("KitPvP", [
+            new AddZoneCommand(),
+            new RemoveZoneCommand()
+        ]);
+
         $this->save = new Config(Main::getInstance()->getDataFolder() . "zones.yml", Config::YAML);
     }
 
@@ -52,6 +60,21 @@ class ZoneManager {
         $this->save->remove($name);
         $this->save->save();
         $this->reloadZones();
+    }
+
+
+    /**
+     * Returns whether a zone with the name exists
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function zoneExists(string $name) : bool {
+        foreach ($this->zones as $zone) {
+            if (!$zone->getName() == $name) continue;
+            return true;
+        }
+        return false;
     }
 
     /**

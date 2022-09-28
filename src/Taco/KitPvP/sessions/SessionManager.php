@@ -2,8 +2,11 @@
 
 use JsonException;
 use pocketmine\player\Player;
+use pocketmine\Server;
 use pocketmine\utils\Config;
 use Taco\KitPvP\Main;
+use Taco\KitPvP\sessions\commands\AddPermissionCommand;
+use Taco\KitPvP\sessions\commands\RemovePermissionCommand;
 
 class SessionManager {
 
@@ -14,6 +17,11 @@ class SessionManager {
     private Config $playerStore;
 
     public function __construct() {
+        Server::getInstance()->getCommandMap()->registerAll("KitPvP", [
+            new AddPermissionCommand(),
+            new RemovePermissionCommand()
+        ]);
+
         $this->playerStore = new Config(Main::getInstance()->getDataFolder() . "store.yml", Config::YAML);
     }
 

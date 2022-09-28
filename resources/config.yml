@@ -14,3 +14,29 @@ quit-message: "§r§c - {name}"
 commands:
   setgroup:
     group-set: "Your group has been set to: {group}"
+kits:
+  drop-ground: "You did not have enough inventory space, so some items have dropped on the ground."
+  still-on-cooldown: "You are still on cooldown for this kit!"
+  types:
+    Swordsman:
+      items:
+        0:
+          id: 267
+          meta: 0
+          enchantments:
+            0:
+              id: 16
+              level: 1
+          custom-name: "Sword"
+          custom-lore:
+            - "lore1"
+            - "lore2"
+      description: "A kit for basic PvP"
+      coolDown: 60
+    name:
+      description: ""
+      items:
+        0:
+          id: 12
+          meta: 21
+      coolDown: 10

@@ -26,9 +26,8 @@ class PlayerSession {
         $this->store = $store;
         $this->player = $player;
 
-        if ($store->exists($player->getName())) {
-            $this->data = $store->get($player->getName());
-        } else $this->data = [
+        if ($store->exists($player->getName())) $this->data = $store->get($player->getName());
+        else $this->data = [
             "kills" => 0,
             "deaths" => 0,
             "killStreak" => 0,
@@ -80,6 +79,30 @@ class PlayerSession {
     }
 
     /**
+     * Adds permission to just the player
+     *
+     * @param string $permission
+     * @return void
+     */
+    public function addPermission(string $permission) : void {
+        if (isset($this->data["permissions"][$permission])) return;
+        $this->data["permissions"][$permission][] = $permission;
+        $this->reloadPermissions();
+    }
+
+    /**
+     * Remove a permission from just the player
+     *
+     * @param string $permission
+     * @return void
+     */
+    public function removePermission(string $permission) : void {
+        if (!$this->player->hasPermission($permission) || !isset($this->data["permissions"][$permission])) return;
+        unset($this->data["permissions"][$permission]);
+        $this->reloadPermissions();
+    }
+
+    /**
      * Saves this sessions data to a file
      *
      * @return void
@@ -104,13 +127,13 @@ class PlayerSession {
     }
 
     /**
-     * Returns a int for the kit coolDown or null
+     * Returns a int for the kit coolDown
      *
      * @param string $name
-     * @return int|null
+     * @return int
      */
-    public function getTimeOnCoolDown(string $name) : ?int {
-        if (!isset($this->data["kitCoolDowns"][$name])) return null;
+    public function getTimeOnCoolDown(string $name) : int {
+        if (!isset($this->data["kitCoolDowns"][$name])) return time();
         return time() - $this->data["kitCoolDowns"][$name];
     }
 

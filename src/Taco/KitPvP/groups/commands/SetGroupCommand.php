@@ -29,7 +29,7 @@ class SetGroupCommand extends Command {
             return;
         }
         Manager::getSessionManager()->getSession($player)->setGroup($group->getName());
-        $sender->sendMessage("Set players group to: " . $group->getFancyName());
+        $sender->sendMessage(TF::GREEN . "Set players group to: " . $group->getFancyName());
         $player->sendMessage(str_replace("{group}", $group->getFancyName(), Main::$config["commands"]["setgroup"]["group-set"]));
     }
 

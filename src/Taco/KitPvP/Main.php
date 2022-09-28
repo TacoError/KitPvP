@@ -18,6 +18,7 @@ class Main extends PluginBase {
     /*** @return void */
     public function onEnable() : void {
         self::$config = $this->getConfig()->getAll();
+
         new Manager();
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
