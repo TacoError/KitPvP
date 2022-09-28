@@ -18,9 +18,9 @@ class KitManager {
         foreach (Main::$config["kits"]["types"] as $name => $data) {
             $this->kits[] = new Kit(
                 $name,
-                $data["description"],
+                $data["description"] ?? "A kit for KitPvP",
                 array_map(fn($item) => $this->constructItem($item), $data["items"]),
-                $data["coolDown"],
+                $data["coolDown"] ?? 1,
                 $data["permission"] ?? null
             );
         }

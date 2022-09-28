@@ -1,10 +1,15 @@
 <?php namespace Taco\KitPvP;
 
 use JsonException;
+use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\player\Player;
 use pocketmine\Server;
 use Taco\KitPvP\utils\PlayerUtils;
 
@@ -36,6 +41,47 @@ class EventListener implements Listener {
         Manager::getSessionManager()->closeSession($player);
     }
 
+    public function onDamage(EntityDamageByEntityEvent $event) : void {
+        $hit = $event->getEntity();
+        $killer = $event->getDamager();
+        if (!$killer instanceof Player || !$hit instanceof Player) return;
+        $zm = Manager::getZoneManager();
+        if ($zm->isInZone($hit->getPosition()) && $zm->isInZone($killer->getPosition())) return;
+        $event->cancel();
+        $killer->sendMessage(Main::$config["zones"]["cannot-hit"]);
+    }
 
+    public function onDeath(PlayerDeathEvent $event) : void {
+        $player = $event->getPlayer();
+        Manager::getSessionManager()->getSession($player)->died();
+        $cause = $player->getLastDamageCause();
+        if (!$cause instanceof EntityDamageByEntityEvent) {
+            $event->setDeathMessage(PlayerUtils::replaceForConfig($player, Main::$config["death"]["unknown-reason"]));
+            return;
+        }
+        $killer = $cause->getDamager();
+        if (!$killer instanceof Player) {
+            $event->setDeathMessage(PlayerUtils::replaceForConfig($player, Main::$config["death"]["unknown-reason"]));
+            return;
+        }
+        Manager::getSessionManager()->getSession($killer)->killed();
+        $event->setDeathMessage(str_replace(
+            ["{name}", "{killer}"],
+            [$player->getName(), $killer->getName()],
+            Main::$config["death"]["killed"]
+        ));
+    }
+
+    public function onPlace(BlockPlaceEvent $event) : void {
+        $player = $event->getPlayer();
+        if ($player->hasPermission("core.build")) return;
+        $event->cancel();
+    }
+
+    public function onBreak(BlockBreakEvent $event) : void {
+        $player = $event->getPlayer();
+        if ($player->hasPermission("core.build")) return;
+        $event->cancel();
+    }
 
 }

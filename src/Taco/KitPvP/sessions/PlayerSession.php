@@ -41,6 +41,29 @@ class PlayerSession {
     }
 
     /**
+     * Ran when the player is killed
+     *
+     * @return void
+     */
+    public function died() : void {
+        $this->data["killStreak"] = 0;
+        $this->data["deaths"]++;
+    }
+
+    /**
+     * Ran when the player kills another player
+     *
+     * @return void
+     */
+    public function killed() : void {
+        $this->data["killStreak"]++;
+        $this->data["kills"]++;
+        if ($this->data["killStreak"] > $this->data["bestKillStreak"]) {
+            $this->data["bestKillStreak"] = $this->data["killStreak"];
+        }
+    }
+
+    /**
      * Sets the group for the session and reloads the permissions
      *
      * @param string $name

@@ -14,3 +14,5 @@ permissions:
     default: op
   core.zones:
     default: op
+  core.build:
+    default: op

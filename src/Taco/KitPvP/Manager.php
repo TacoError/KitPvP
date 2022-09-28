@@ -3,6 +3,7 @@
 use Taco\KitPvP\groups\GroupManager;
 use Taco\KitPvP\kits\KitManager;
 use Taco\KitPvP\sessions\SessionManager;
+use Taco\KitPvP\warps\WarpManager;
 use Taco\KitPvP\zones\ZoneManager;
 
 class Manager {
@@ -19,11 +20,15 @@ class Manager {
     /** @var KitManager */
     private static KitManager $kitManager;
 
+    /** @var WarpManager */
+    private static WarpManager $warpManager;
+
     public function __construct() {
         self::$sessionManager = new SessionManager();
         self::$zoneManager = new ZoneManager();
         self::$groupManager = new GroupManager();
         self::$kitManager = new KitManager();
+        self::$warpManager = new WarpManager();
     }
 
     /*** @return SessionManager */
@@ -44,6 +49,11 @@ class Manager {
     /*** @return KitManager */
     public static function getKitManager() : KitManager {
         return self::$kitManager;
+    }
+
+    /*** @return WarpManager */
+    public static function getWarpManager() : WarpManager {
+        return self::$warpManager;
     }
 
 }
